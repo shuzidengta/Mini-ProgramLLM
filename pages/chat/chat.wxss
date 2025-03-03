@@ -7,9 +7,9 @@
 
 .chat-container {
   flex: 1;
-  padding: 16px;
-  margin-top: 44px; /* 减小与导航栏的距离 */
-  margin-bottom: 60px;
+  padding: 0px;
+  margin-top: 0px; /* 减小与导航栏的距离 */
+  margin-bottom: 0px;
   overflow-y: auto;
 }
 
@@ -46,7 +46,7 @@
   left: 0;
   right: 0;
   background: #fff;
-  padding: 8px 16px;
+  padding: 0px 16px;
   border-top: 1px solid #eee;
 }
 
@@ -83,7 +83,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 16px;
+  padding: 0;
   z-index: 100;
   border-bottom: 1px solid #eee;
 }

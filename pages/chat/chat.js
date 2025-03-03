@@ -25,12 +25,15 @@ Page({
       const systemInfo = wx.getSystemInfoSync();
       const menuButtonInfo = wx.getMenuButtonBoundingClientRect();
       const statusBarHeight = systemInfo.statusBarHeight;
-      const navBarHeight = menuButtonInfo.height + (menuButtonInfo.top - statusBarHeight) * 2;
+      
+      // 根据胶囊按钮位置计算导航栏高度
+      const navBarHeight = (menuButtonInfo.top - statusBarHeight) * 2 + menuButtonInfo.height;
       
       const customNavbarStyle = `
         height: ${navBarHeight}px;
         padding-top: ${statusBarHeight}px;
-        min-height: ${navBarHeight + statusBarHeight}px;
+        padding-left: ${systemInfo.windowWidth - menuButtonInfo.right}px;
+        padding-right: ${systemInfo.windowWidth - menuButtonInfo.right}px;
       `;
       
       this.setData({ 
