@@ -15,43 +15,65 @@
                scroll-with-animation="true">
     <view class="message-list">
       <view wx:for="{{messages}}" wx:key="id" class="message {{item.type}}" id="{{item.id}}">
-        <text wx:if="{{!item.isPlan}}">{{item.content}}</text>
-        <view wx:else class="plan-card {{item.planData.plan_id === 1 ? 'recommended' : ''}}">
-          <view class="plan-header">
-            <view class="plan-title">{{item.planData.plan_name}}</view>
-            <view class="plan-tag" wx:if="{{item.planData.plan_id === 1}}">推荐</view>
-            <view class="plan-tag economy" wx:elif="{{item.planData.plan_id === 2}}">性价比</view>
-            <view class="plan-tag budget" wx:elif="{{item.planData.plan_id === 3}}">经济型</view>
-            <view class="details-button">详情</view>
+        <block wx:if="{{!item.isPlan && !item.isSummary}}">
+          <text>{{item.content}}</text>
+        </block>
+        <block wx:if="{{item.isSummary}}">
+          <view class="plan-summary">
+            <text>{{item.content}}</text>
           </view>
-          
-          <view class="travel-way">
-            <text>{{item.planData.travel_way}}</text>
-          </view>
+          <view class="plan-cards">
+            <block wx:for="{{item.plans}}" wx:key="plan_id" wx:for-item="plan">
+              <view class="plan-card {{plan.plan_id === 1 ? 'recommended' : ''}}">
+                <view class="plan-header">
+                  <view class="plan-title">{{plan.plan_name}}</view>
+                  <view class="plan-tag" wx:if="{{plan.plan_id === 1}}">推荐</view>
+                  <view class="plan-tag economy" wx:elif="{{plan.plan_id === 2}}">性价比</view>
+                  <view class="plan-tag budget" wx:elif="{{plan.plan_id === 3}}">经济型</view>
+                  <view class="details-button">详情</view>
+                </view>
+                
+                <view class="travel-way">
+                  <text>{{plan.travel_way}}</text>
+                </view>
 
-          <view class="plan-info">
-            <view class="info-item cost-info">
-              <view class="icon-wrapper">
-                <image src="../images/cost.png" mode="aspectFit"/>
+                <view class="plan-info">
+                  <view class="info-item cost-info">
+                    <view class="icon-wrapper">
+                      <image src="../images/cost.png" mode="aspectFit"/>
+                    </view>
+                    <text>{{plan.cost}}</text>
+                  </view>
+                  <view class="info-item time-info">
+                    <view class="icon-wrapper">
+                      <image src="../images/time.png" mode="aspectFit"/>
+                    </view>
+                    <text>{{plan.time}}</text>
+                  </view>
+                </view>
+                
+                <view class="hotel-info" wx:if="{{plan.hotel}}">
+                  <image src="../images/hotel.png" mode="aspectFit"/>
+                  <text>{{plan.hotel}}</text>
+                </view>
+                
+                <view class="attractions-info" wx:if="{{plan.advice}}">
+                  <image src="../images/site.png" mode="aspectFit"/>
+                  <text>{{plan.advice}}</text>
+                </view>
               </view>
-              <text>{{item.planData.cost}}</text>
-            </view>
-            <view class="info-item time-info">
-              <view class="icon-wrapper">
-                <image src="../images/time.png" mode="aspectFit"/>
-              </view>
-              <text>{{item.planData.time}}</text>
-            </view>
+            </block>
           </view>
-          
-          <view class="hotel-info" wx:if="{{item.planData.hotel}}">
-            <image src="../images/hotel.png" mode="aspectFit"/>
-            <text>{{item.planData.hotel}}</text>
-          </view>
-          
-          <view class="attractions-info" wx:if="{{item.planData.advice}}">
-            <image src="../images/site.png" mode="aspectFit"/>
-            <text>{{item.planData.advice}}</text>
+        </block>
+      </view>
+      <!-- 加载动画 -->
+      <view class="message bot thinking" wx:if="{{isLoading}}">
+        <view class="thinking-content">
+          <text>团子正在思考中</text>
+          <view class="loading-dots">
+            <view class="dot"></view>
+            <view class="dot"></view>
+            <view class="dot"></view>
           </view>
         </view>
       </view>

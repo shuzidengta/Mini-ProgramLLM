@@ -5,7 +5,8 @@ Page({
     inputValue: '',
     customNavbarStyle: '',
     scrollToMessage: '',
-    contextHistory: []
+    contextHistory: [],
+    isLoading: false
   },
 
   onLoad(options) {
@@ -93,6 +94,9 @@ Page({
     });
 
     this.manageContextHistory();
+    
+    // 设置加载状态为true
+    this.setData({ isLoading: true });
 
     wx.request({
       url: 'http://localhost:8000/chat',
@@ -123,36 +127,32 @@ Page({
               content: cleanResponse
             });
 
-            // 确保我们有一个有效的plans数组
+            // 如果包含plans数组，创建一个包含summary和plans的完整消息
             if (responseData && responseData.plans && Array.isArray(responseData.plans)) {
-              // 为每个方案创建一条消息
-              const newMessages = responseData.plans.map(plan => ({
-                id: `${Date.now()}_${plan.plan_id}`,
+              const newMessage = {
+                id: Date.now().toString(),
                 type: 'bot',
-                isPlan: true,
-                planData: {
-                  plan_id: plan.plan_id,
-                  plan_name: plan.plan_name || this.getPlanName(plan.plan_id),
-                  travel_way: this.formatTravelWay(plan.travel_way),
-                  cost: plan.cost,
-                  time: plan.time,
-                  hotel: plan.hotel,
-                  advice: plan.advice
-                }
-              }));
+                isSummary: true,
+                content: responseData.summary || '',
+                plans: responseData.plans
+              };
 
               this.setData({ 
                 contextHistory,
-                messages: [...this.data.messages, ...newMessages],
-                scrollToMessage: newMessages[newMessages.length - 1].id
+                messages: [...this.data.messages, newMessage],
+                scrollToMessage: newMessage.id,
+                isLoading: false
               });
             } else {
+              // 如果没有plans，则作为普通消息处理
               this.addMessage('bot', cleanResponse);
+              this.setData({ isLoading: false });
             }
           } catch (error) {
             console.error('解析计划数据失败:', error);
             this.addMessage('bot', typeof res.data.response === 'string' ? 
               res.data.response : JSON.stringify(res.data.response));
+            this.setData({ isLoading: false });
           }
         }
       },
@@ -162,6 +162,7 @@ Page({
           title: '请求失败',
           icon: 'error'
         });
+        this.setData({ isLoading: false });
       }
     });
   },
