@@ -7,9 +7,6 @@
       </view>
       <view class="title">联程宝</view>
     </view>
-    <view class="nav-right">
-      <image src="../images/back.png" mode="aspectFit"/>
-    </view>
   </view>
 
   <!-- 聊天内容区域 -->

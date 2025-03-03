@@ -20,17 +20,14 @@ Page({
       // 计算导航栏高度和上边距
       const statusBarHeight = systemInfo.statusBarHeight;
       const navBarHeight = menuButtonInfo.height + (menuButtonInfo.top - statusBarHeight) * 2;
-      const totalNavHeight = navBarHeight + statusBarHeight;
       
-      // 设置导航栏样式
-      const customNavbarStyle = ` height: ${navBarHeight}px;padding-top:${statusBarHeight}px; `;
-      
-    
+      // 优化导航栏样式设置
+      const customNavbarStyle = `height: ${navBarHeight}px; padding-top: ${statusBarHeight}px; line-height: ${navBarHeight}px;`;
       
       // 更新数据
       this.setData({
         customNavbarStyle,
-        navBarHeight: totalNavHeight
+        navBarHeight: navBarHeight + statusBarHeight
       });
       
     } catch (error) {

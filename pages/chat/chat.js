@@ -30,9 +30,13 @@ Page({
       const customNavbarStyle = `
         height: ${navBarHeight}px;
         padding-top: ${statusBarHeight}px;
+        min-height: ${navBarHeight + statusBarHeight}px;
       `;
       
-      this.setData({ customNavbarStyle });
+      this.setData({ 
+        customNavbarStyle,
+        navBarHeight: navBarHeight + statusBarHeight 
+      });
     } catch (error) {
       console.error('设置导航栏样式失败:', error);
     }

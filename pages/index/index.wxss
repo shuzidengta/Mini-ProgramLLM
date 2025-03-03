@@ -3,6 +3,7 @@
   width: 100%;
   height: 100%;
   background-color: #F8FAFC;
+  padding: 0;
 }
 
 /* 导航栏样式 */
@@ -23,6 +24,7 @@
   width: 100%;
   min-height: 100vh;
   box-sizing: border-box;
+  padding-top: 88px;
 }
 
 /* 菜单按钮 */
