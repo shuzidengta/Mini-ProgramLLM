@@ -1,0 +1,75 @@
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <view class="custom-navbar" style="{{customNavbarStyle}}">
+    <view class="nav-left">
+      <view class="back-button" bindtap="onBack">
+        <image src="../images/back.png" mode="aspectFit"/>
+      </view>
+      <view class="title">联程宝</view>
+    </view>
+    <view class="nav-right">
+      <image src="../images/back.png" mode="aspectFit"/>
+    </view>
+  </view>
+
+  <!-- 聊天内容区域 -->
+  <scroll-view class="chat-container" scroll-y="true" 
+               scroll-into-view="{{scrollToMessage}}" 
+               scroll-with-animation="true">
+    <view class="message-list">
+      <view wx:for="{{messages}}" wx:key="id" class="message {{item.type}}" id="{{item.id}}">
+        <text wx:if="{{!item.isPlan}}">{{item.content}}</text>
+        <view wx:else class="plan-card {{item.planData.plan_id === 1 ? 'recommended' : ''}}">
+          <view class="plan-header">
+            <view class="plan-title">{{item.planData.plan_name}}</view>
+            <view class="plan-tag" wx:if="{{item.planData.plan_id === 1}}">推荐</view>
+            <view class="plan-tag economy" wx:elif="{{item.planData.plan_id === 2}}">性价比</view>
+            <view class="plan-tag budget" wx:elif="{{item.planData.plan_id === 3}}">经济型</view>
+            <view class="details-button">详情</view>
+          </view>
+          
+          <view class="travel-way">
+            <text>{{item.planData.travel_way}}</text>
+          </view>
+
+          <view class="plan-info">
+            <view class="info-item cost-info">
+              <view class="icon-wrapper">
+                <image src="../images/cost.png" mode="aspectFit"/>
+              </view>
+              <text>{{item.planData.cost}}</text>
+            </view>
+            <view class="info-item time-info">
+              <view class="icon-wrapper">
+                <image src="../images/time.png" mode="aspectFit"/>
+              </view>
+              <text>{{item.planData.time}}</text>
+            </view>
+          </view>
+          
+          <view class="hotel-info" wx:if="{{item.planData.hotel}}">
+            <image src="../images/hotel.png" mode="aspectFit"/>
+            <text>{{item.planData.hotel}}</text>
+          </view>
+          
+          <view class="attractions-info" wx:if="{{item.planData.advice}}">
+            <image src="../images/site.png" mode="aspectFit"/>
+            <text>{{item.planData.advice}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部输入区域 -->
+  <view class="input-container">
+    <view class="input-wrapper">
+      <input class="input-field" 
+             value="{{inputValue}}" 
+             placeholder="请输入内容" 
+             bindinput="onInputChange"
+             bindconfirm="onSend"/>
+      <view class="send-button" bindtap="onSend">发送</view>
+    </view>
+  </view>
+</view>

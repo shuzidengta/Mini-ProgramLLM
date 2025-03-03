@@ -1,0 +1,73 @@
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <view class="custom-navbar" style="{{customNavbarStyle}}">
+    <!-- 菜单按钮 -->
+    <view class="more-button" bindtap="onclick" style="{{customButtonStyle}}">
+      <image src="../images/more.png" mode="aspectFit"></image>
+    </view>
+    
+    <!-- 当前定位 -->
+    <view class="location">
+      <text>成都</text>
+      <text class="location-arrow">▼</text>
+    </view>
+
+    <!-- 当前天气 -->
+    <view class="weather">
+      <image src="../images/weather.png" mode="aspectFit"/>
+      <text> 20℃</text>
+    </view>
+  </view>
+
+  <!-- 页面主要内容 -->
+  <view class="main-content" >
+    <view class="page-content">
+      <!-- 头部内容 -->
+        <view class="header-content">
+          <view class="text-container">
+            <view class="title">嗨！</view>
+            <view class="subtitle">我是"团子"</view>
+            <view class="description">可以帮你约车/购买汽车票/火车票/机票/景区门票/制定行程，快跟我对话吧</view>
+          </view>
+          <view class="panda-container">
+            <image src="../images/panda1.gif" mode="aspectFit"/>
+          </view>
+        </view>
+      
+
+      <!-- 功能列表 -->
+      <view class="function-list">
+        <view class="function-item">
+          <text>详细介绍团子能帮我做些什么</text>
+          <image src="../images/question1.png" mode="aspectFit"/>
+        </view>
+        <view class="function-item">
+          <text>如何预定网约车</text>
+          <image src="../images/question1.png" mode="aspectFit"/>
+        </view>
+        <view class="function-item">
+          <text>如何一句话就完成行程规划</text>
+          <image src="../images/question1.png" mode="aspectFit"/>
+        </view>
+        <view class="function-item">
+          <text>什么是定制客运</text>
+          <image src="../images/question1.png" mode="aspectFit"/>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- 快捷功能入口 -->
+  <view class="quick-button-container">
+  <button>我的行程</button>
+  <button >电子发票</button>
+  <button >卡券</button>
+  <!-- <button >帮我记住</button> -->
+ </view>
+  
+  <!-- 底部输入框容器 -->
+  <view class="input-container">
+    <view class="input-wrapper">
+      <input value="{{inputValue}}" key="{{inputValueKey}}" class="input-field" placeholder="想去哪里请告诉我" bindinput="onInputChange" bindconfirm="onSend"/>
+    </view>
+  </view>
+</view>

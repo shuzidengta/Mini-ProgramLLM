@@ -1,0 +1,252 @@
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #F8FAFC;
+}
+
+.chat-container {
+  flex: 1;
+  padding: 16px;
+  margin-top: 88px;
+  margin-bottom: 60px;
+}
+
+.message-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  max-width: 80%;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.user {
+  align-self: flex-end;
+  background-color: #E3F2FD;
+  color: #333;
+}
+
+.bot {
+  align-self: flex-start;
+  background-color: #fff;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.input-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  padding: 8px 16px;
+  border-top: 1px solid #eee;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.input-field {
+  flex: 1;
+  height: 36px;
+  background: #f5f5f5;
+  border-radius: 18px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+
+.send-button {
+  margin-left: 8px;
+  padding: 8px 16px;
+  background: #1989fa;
+  color: #fff;
+  border-radius: 18px;
+  font-size: 14px;
+}
+
+/* 导航栏样式 */
+.custom-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  z-index: 100;
+  border-bottom: 1px solid #eee;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  flex: 1; /* 让左侧容器占据剩余空间 */
+  justify-content: center; /* 让子元素水平居中 */
+}
+
+.back-button {
+  padding: 8px;
+  position: absolute; /* 将返回按钮绝对定位 */
+  left: 16px; /* 设置返回按钮的左侧位置 */
+}
+
+.back-button image {
+  width: 20px;
+  height: 20px;
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 500;
+  margin: 0; /* 移除原有的 margin-left */
+}
+
+.nav-right image {
+  width: 24px;
+  height: 24px;
+}
+
+.plan-card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #E5E7EB;
+}
+
+.plan-card.recommended {
+  border-left: 4px solid #4CAF50;
+}
+
+.plan-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.plan-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.plan-tag {
+  background: #4CAF50;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.plan-tag.economy {
+  background: #2196F3;
+}
+
+.plan-tag.budget {
+  background: #FF9800;
+}
+
+.details-button {
+  position: absolute;
+  right: 0;
+  color: #1989fa;
+  font-size: 14px;
+}
+
+.travel-way {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.plan-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 12px 0;
+  padding: 12px 0;
+  border-top: 1px solid #f5f5f5;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 14px;
+}
+
+.icon-wrapper {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-wrapper image {
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+}
+
+.hotel-info, .attractions-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.hotel-info image, .attractions-info image {
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+}
+
+.route-info {
+  margin: 12px 0;
+  border-top: 1px solid #f5f5f5;
+  border-bottom: 1px solid #f5f5f5;
+  padding: 12px 0;
+}
+
+.route-segment {
+  margin-bottom: 12px;
+}
+
+.route-segment:last-child {
+  margin-bottom: 0;
+}
+
+.route-title {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.route-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #666;
+  font-size: 14px;
+}
