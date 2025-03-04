@@ -58,7 +58,7 @@
                 </view>
                 
                 <view class="attractions-info" wx:if="{{plan.advice}}">
-                  <image src="../images/site.png" mode="aspectFit"/>
+                  <image src="../images/tips.png" mode="aspectFit"/>
                   <text>{{plan.advice}}</text>
                 </view>
               </view>
@@ -85,10 +85,9 @@
     <view class="input-wrapper">
       <input class="input-field" 
              value="{{inputValue}}" 
-             placeholder="请输入内容" 
+             placeholder="想去哪里请告诉我" 
              bindinput="onInputChange"
              bindconfirm="onSend"/>
-      <view class="send-button" bindtap="onSend">发送</view>
     </view>
   </view>
 </view>
