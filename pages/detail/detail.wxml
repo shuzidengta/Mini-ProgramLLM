@@ -1,2 +1,118 @@
-<!--pages/detail/detail.wxml-->
-<text>pages/detail/detail.wxml</text>
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <view class="custom-navbar" style="{{customNavbarStyle}}">
+    <view class="nav-left">
+      <view class="back-button" bindtap="onBack">
+        <image src="../images/back.png" mode="aspectFit"/>
+      </view>
+      <view class="title">行程详情</view>
+    </view>
+  </view>
+
+  <!-- 主要内容区域 -->
+  <scroll-view class="content" scroll-y="true" style="margin-top: {{navBarHeight}}px;">
+    <!-- 地图区域 -->
+    <view class="map-container">
+      <map class="map" longitude="104.06" latitude="30.67" scale="12"></map>
+    </view>
+
+    <!-- 行程信息 -->
+    <view class="travel-info">
+      <!-- 网约车信息 -->
+      <view class="section" wx:if="{{plan.travel_way.includes('online_car')}}">
+        <view class="section-header">
+          <image class="icon" src="../images/car.png" mode="aspectFit"/>
+          <text>网约车</text>
+        </view>
+        <view class="section-content">
+          <view class="info-row">
+            <text class="label">出发时间：</text>
+            <text>2025-01-15 09:30</text>
+          </view>
+          <view class="info-row">
+            <text class="label">路线：</text>
+            <text>成都绿地之窗 → 双流机场</text>
+          </view>
+          <view class="info-row">
+            <text class="label">耗时：</text>
+            <text>1小时05分钟</text>
+          </view>
+          <view class="info-row">
+            <text class="label">费用：</text>
+            <text>¥35/人</text>
+          </view>
+          <view class="tips">
+            <text class="tips-text">温馨提示：请提前准备好，以免误机</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 飞机信息 -->
+      <view class="section" wx:if="{{plan.travel_way.includes('bullet_train')}}">
+        <view class="section-header">
+          <image class="icon" src="../images/plane.png" mode="aspectFit"/>
+          <text>飞机</text>
+        </view>
+        <view class="section-content">
+          <view class="info-row">
+            <text class="label">出发时间：</text>
+            <text>2025-01-15 11:30</text>
+          </view>
+          <view class="info-row">
+            <text class="label">路线：</text>
+            <text>成都双流机场 → 北京首都机场</text>
+          </view>
+          <view class="info-row">
+            <text class="label">耗时：</text>
+            <text>3小时27分钟</text>
+          </view>
+          <view class="info-row">
+            <text class="label">费用：</text>
+            <text>¥1000/人</text>
+          </view>
+          <view class="tips">
+            <text class="tips-text">航班餐食已预订，无需额外付费</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 酒店信息 -->
+      <view class="section" wx:if="{{plan.hotel}}">
+        <view class="section-header">
+          <image class="icon" src="../images/hotel.png" mode="aspectFit"/>
+          <text>酒店</text>
+        </view>
+        <view class="section-content">
+          <view class="info-row">
+            <text class="label">入住时间：</text>
+            <text>2025-01-15 14:00</text>
+          </view>
+          <view class="info-row">
+            <text class="label">酒店：</text>
+            <text>北京中华门全季酒店</text>
+          </view>
+          <view class="info-row">
+            <text class="label">住宿：</text>
+            <text>3晚</text>
+          </view>
+          <view class="info-row">
+            <text class="label">费用：</text>
+            <text>¥400/晚</text>
+          </view>
+          <view class="tips">
+            <text class="tips-text">入住时请出示身份证</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部确认区域 -->
+  <view class="bottom-bar">
+    <view class="total-price">
+      <text>总计：</text>
+      <text class="price">¥{{totalCost}}</text>
+    </view>
+    <view class="confirm-button" bindtap="onConfirm">一键预订</view>
+  </view>
+</view>

@@ -17,7 +17,7 @@
       <view wx:for="{{messages}}" wx:key="id" class="message {{item.type}}" id="{{item.id}}">
         <block wx:if="{{!item.isPlan && !item.isSummary}}">
           <text>{{item.content}}</text>
-        </block>
+        </block>·
         <block wx:if="{{item.isSummary}}">
           <view class="plan-summary">
             <text>{{item.content}}</text>
@@ -30,7 +30,7 @@
                   <view class="plan-tag" wx:if="{{plan.plan_id === 1}}">推荐</view>
                   <view class="plan-tag economy" wx:elif="{{plan.plan_id === 2}}">性价比</view>
                   <view class="plan-tag budget" wx:elif="{{plan.plan_id === 3}}">经济型</view>
-                  <view class="details-button">详情</view>
+                  <view class="details-button" bindtap="onDetailsButtonTap">详情</view>
                 </view>
                 
                 <view class="travel-way">

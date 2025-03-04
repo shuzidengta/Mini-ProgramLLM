@@ -1,66 +1,82 @@
-// pages/detail/detail.js
+// pages/chat/chat.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    customNavbarStyle: '',
+    navBarHeight: 0,
+    plan: null,
+    totalCost: 0
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad(options) {
-
+    // 设置导航栏样式
+    this.setNavBarStyle();
+    
+    // 解析传入的方案数据
+    if (options.plan) {
+      const plan = JSON.parse(decodeURIComponent(options.plan));
+      this.setData({ 
+        plan,
+        totalCost: this.calculateTotalCost(plan)
+      });
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+  calculateTotalCost(plan) {
+    let total = 0;
+    // 网约车费用
+    if (plan.travel_way.includes('online_car')) {
+      total += 35;
+    }
+    // 机票费用
+    if (plan.travel_way.includes('bullet_train')) {
+      total += 1000;
+    }
+    // 酒店费用
+    if (plan.hotel) {
+      total += 400;
+    }
+    return total;
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  setNavBarStyle() {
+    try {
+      const systemInfo = wx.getSystemInfoSync();
+      const menuButtonInfo = wx.getMenuButtonBoundingClientRect();
+      const statusBarHeight = systemInfo.statusBarHeight;
+      
+      // 根据胶囊按钮位置计算导航栏高度
+      const navBarHeight = (menuButtonInfo.top - statusBarHeight) * 2 + menuButtonInfo.height;
+      
+      const customNavbarStyle = `
+        height: ${navBarHeight}px;
+        padding-top: ${statusBarHeight}px;
+        padding-left: ${systemInfo.windowWidth - menuButtonInfo.right}px;
+        padding-right: ${systemInfo.windowWidth - menuButtonInfo.right}px;
+      `;
+      
+      this.setData({ 
+        customNavbarStyle,
+        navBarHeight: navBarHeight + statusBarHeight 
+      });
+    } catch (error) {
+      console.error('设置导航栏样式失败:', error);
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
+  onBack() {
+    wx.navigateBack();
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  onConfirm() {
+    wx.showToast({
+      title: '预订成功',
+      icon: 'success',
+      duration: 2000
+    });
+    setTimeout(() => {
+      wx.navigateBack({
+        delta: 2  // 返回上两级页面
+      });
+    }, 2000);
   }
-})
+});

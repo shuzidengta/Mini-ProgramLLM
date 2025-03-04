@@ -1,1 +1,167 @@
-/* pages/detail/detail.wxss */
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #F8FAFC;
+}
+
+/* 导航栏样式 */
+.custom-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  z-index: 100;
+  border-bottom: 1px solid #eee;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+}
+
+.back-button {
+  padding: 8px;
+  position: absolute;
+  left: 16px;
+}
+
+.back-button image {
+  width: 20px;
+  height: 20px;
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+/* 内容区域样式 */
+.content {
+  flex: 1;
+  background: #F8FAFC;
+}
+
+/* 地图容器 */
+.map-container {
+  width: 100%;
+  height: 200px;
+  background: #fff;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+}
+
+/* 行程信息样式 */
+.travel-info {
+  padding: 16px;
+}
+
+.section {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.section-header .icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+.section-header text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.section-content {
+  color: #666;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.info-row .label {
+  color: #999;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.tips {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #eee;
+}
+
+.tips-text {
+  font-size: 12px;
+  color: #999;
+}
+
+/* 底部确认区域 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.total-price {
+  font-size: 14px;
+  color: #333;
+}
+
+.total-price .price {
+  font-size: 20px;
+  font-weight: 500;
+  color: #f85959;
+  margin-left: 4px;
+}
+
+.confirm-button {
+  background: #1989fa;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 16px;
+}
+
+.icon-wrapper {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+

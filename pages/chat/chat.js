@@ -95,76 +95,87 @@ Page({
 
     this.manageContextHistory();
     
-    // 设置加载状态为true
     this.setData({ isLoading: true });
-
-    wx.request({
-      url: 'http://localhost:8000/chat',
-      method: 'POST',
-      data: {
-        message: message,
-        context: contextHistory
-      },
-      header: {
-        'Content-Type': 'application/json'
-      },
-      success: (res) => {
-        console.log('后端返回数据:', res.data);
-        if (res.data && res.data.response) {
-          try {
-            // 清理响应数据中的换行符和多余空格
-            let cleanResponse = res.data.response.replace(/\\n/g, '').replace(/\s+/g, ' ').trim();
-            
-            // 解析返回的JSON数据
-            let responseData = typeof cleanResponse === 'string' ? 
-              JSON.parse(cleanResponse) : cleanResponse;
-            
-            console.log('解析后的数据:', responseData);
-            
-            // 添加到上下文
-            contextHistory.push({
-              role: 'assistant',
-              content: cleanResponse
-            });
-
-            // 如果包含plans数组，创建一个包含summary和plans的完整消息
-            if (responseData && responseData.plans && Array.isArray(responseData.plans)) {
-              const newMessage = {
-                id: Date.now().toString(),
-                type: 'bot',
-                isSummary: true,
-                content: responseData.summary || '',
-                plans: responseData.plans
-              };
-
-              this.setData({ 
-                contextHistory,
-                messages: [...this.data.messages, newMessage],
-                scrollToMessage: newMessage.id,
-                isLoading: false
+    
+    // 添加重试机制
+    const maxRetries = 3;
+    let retryCount = 0;
+    
+    const makeRequest = () => {
+      wx.request({
+        url: 'http://localhost:8000/chat',
+        method: 'POST',
+        data: {
+          message: message,
+          context: contextHistory
+        },
+        header: {
+          'Content-Type': 'application/json'
+        },
+        timeout: 30000, // 增加超时时间到30秒
+        success: (res) => {
+          console.log('后端返回数据:', res.data);
+          if (res.data && res.data.response) {
+            try {
+              let cleanResponse = res.data.response.replace(/\\n/g, '').replace(/\s+/g, ' ').trim();
+              let responseData = typeof cleanResponse === 'string' ? 
+                JSON.parse(cleanResponse) : cleanResponse;
+              
+              console.log('解析后的数据:', responseData);
+              
+              contextHistory.push({
+                role: 'assistant',
+                content: cleanResponse
               });
-            } else {
-              // 如果没有plans，则作为普通消息处理
-              this.addMessage('bot', cleanResponse);
+
+              if (responseData && responseData.plans && Array.isArray(responseData.plans)) {
+                const newMessage = {
+                  id: Date.now().toString(),
+                  type: 'bot',
+                  isSummary: true,
+                  content: responseData.summary || '',
+                  plans: responseData.plans
+                };
+
+                this.setData({ 
+                  contextHistory,
+                  messages: [...this.data.messages, newMessage],
+                  scrollToMessage: newMessage.id,
+                  isLoading: false
+                });
+              } else {
+                this.addMessage('bot', cleanResponse);
+                this.setData({ isLoading: false });
+              }
+            } catch (error) {
+              console.error('解析计划数据失败:', error);
+              this.addMessage('bot', '抱歉，服务器返回的数据格式有误，请重试');
               this.setData({ isLoading: false });
             }
-          } catch (error) {
-            console.error('解析计划数据失败:', error);
-            this.addMessage('bot', typeof res.data.response === 'string' ? 
-              res.data.response : JSON.stringify(res.data.response));
+          }
+        },
+        fail: (error) => {
+          console.error('请求失败:', error);
+          if (retryCount < maxRetries) {
+            retryCount++;
+            console.log(`第${retryCount}次重试...`);
+            setTimeout(() => {
+              makeRequest();
+            }, 1000 * retryCount); // 递增重试延迟
+          } else {
+            wx.showToast({
+              title: '网络连接失败',
+              icon: 'error',
+              duration: 2000
+            });
+            this.addMessage('bot', '抱歉，网络连接出现问题，请稍后重试');
             this.setData({ isLoading: false });
           }
         }
-      },
-      fail: (error) => {
-        console.error('请求失败:', error);
-        wx.showToast({
-          title: '请求失败',
-          icon: 'error'
-        });
-        this.setData({ isLoading: false });
-      }
-    });
+      });
+    };
+
+    makeRequest();
   },
 
   getPlanName(planId) {
@@ -185,5 +196,10 @@ Page({
 
   onBack() {
     wx.navigateBack();
+  },
+  onDetailsButtonTap(){
+    wx.navigateTo({
+      url: `/pages/detail/detail`
+    });
   }
 });
