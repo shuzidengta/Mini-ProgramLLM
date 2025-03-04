@@ -10,7 +10,7 @@
   </view>
 
   <!-- 主要内容区域 -->
-  <scroll-view class="content" scroll-y="true" style="margin-top: {{navBarHeight}}px;">
+  <scroll-view class="content" scroll-y="true">
     <!-- 地图区域 -->
     <view class="map-container">
       <map class="map" longitude="104.06" latitude="30.67" scale="12"></map>
