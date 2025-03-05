@@ -215,7 +215,7 @@
   font-size: 24rpx;
   color: #999999;
   line-height: 1.4;
-  white-space: nowrap; /* 强制横向排列 */
+  white-space: normal; /* 文本正常换行 */
 }
 
 /* 底部确认区域 */
@@ -292,8 +292,8 @@
 }
 
 .loading-image {
-  width: 120rpx;
-  height: 120rpx;
+  width: 200rpx;
+  height: 200rpx;
   margin-bottom: 20rpx;
 }
 
@@ -302,11 +302,13 @@
   color: #666;
 }
 .tips {
-  margin-top: 12rpx;
-  padding: 16rpx 24rpx;
-  background: #F7F8FA;
+  padding: 16rpx 0rpx;
   border-radius: 8rpx;
   display: flex; /* 添加 Flex 布局 */
-  align-items: center; /* 垂直居中 */
+}
+.tips-icon {
+  width: 35rpx;
+  height: 30rpx;
+  margin-right: 10rpx;
 }
 

@@ -21,23 +21,28 @@
 .message {
   max-width: 80%;
   padding: 12px 16px;
-  margin-bottom: 12px;
+  margin: 8px 16px;
   border-radius: 8px;
   font-size: 14px;
   line-height: 1.4;
+  background-color: #eef2f5;
 }
 
 .user {
   align-self: flex-end;
   background-color: #E3F2FD;
   color: #333;
+  margin-right: 16px;
 }
 
 .bot {
   align-self: flex-start;
   background-color: #fff;
   color: #333;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-left: 16px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .input-container {
@@ -122,7 +127,6 @@
 }
 
 .plan-summary {
-  margin-bottom: 16px;
   font-size: 14px;
   color: #333;
   line-height: 1.5;
@@ -131,20 +135,18 @@
 .plan-cards {
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
 
 .plan-card {
   background: #FFFFFF;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 24rpx;
-  margin-bottom: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid #E5E7EB;
+  margin-top: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .plan-card.recommended {
-  border-left: 4px solid #4CAF50;
+  border-left: 0px solid #4CAF50;
 }
 
 .plan-header {
@@ -350,20 +352,6 @@
 /* 如果建议内容较长，确保有合适的间距 */
 .attractions-info:last-child {
   margin-bottom: 8rpx;
-}
-
-/* 温馨提示样式优化 */
-.tips-container {
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-  color: #999;
-  margin-top: 8px;
-}
-
-.tips-label {
-  color: #999;
-  margin-right: 4px;
 }
 
 .tips-content {

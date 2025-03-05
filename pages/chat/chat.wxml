@@ -63,12 +63,6 @@
                   </view>
                   <text class="advice-text">{{plan.advice}}</text>
                 </view>
-
-                <!-- 温馨提示部分 -->
-                <view class="tips-container">
-                  <text class="tips-label">温馨提示：</text>
-                  <text class="tips-content">{{plan.tips}}</text>
-                </view>
               </view>
             </block>
           </view>

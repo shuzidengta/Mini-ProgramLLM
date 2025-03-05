@@ -13,6 +13,7 @@ Page({
     // 添加图标映射配置
     iconMap: {
       网约车: 'taxi',
+      打车: 'taxi',
       出租车: 'taxi',
       机场大巴: 'bus',
       汽车: 'bus',

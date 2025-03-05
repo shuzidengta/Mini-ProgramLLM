@@ -12,7 +12,7 @@
   <!-- 加载中的动画 -->
   <view class="loading-container" wx:if="{{isLoading}}">
     <view class="loading-content">
-      <image class="loading-image" src="../images/loading.gif" mode="aspectFit"/>
+      <image class="loading-image" src="../images/panda1.gif" mode="aspectFit"/>
       <text class="loading-text">小团正在努力加载中...</text>
     </view>
   </view>
@@ -33,7 +33,6 @@
             <view class="timeline-number">
               <text>{{index + 1}}</text>
             </view>
-            
             <!-- 连接线 -->
             <view class="timeline-line" wx:if="{{index < itinerary.segments.length - 1}}"></view>
             
@@ -77,9 +76,10 @@
               </view>
               
               <!-- 提示信息 -->
-              <!-- <view class="tips" wx:if="{{item.notice}}">
+              <view class="tips" wx:if="{{item.notice}}">
+                <image class="tips-icon" src="../images/tips.png"/>  
                 <text class="tips-text">温馨提示：{{item.notice}}</text>
-              </view> -->
+              </view>
             </view>
           </view>
         </block>
