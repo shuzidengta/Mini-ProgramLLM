@@ -36,19 +36,26 @@
 }
 
 .more-button image {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   display: block;
 }
 
 /* 位置信息 */
 .location {
+  font-size: 16px;
   position: relative;
   display: flex;
   align-items: center;
   margin-left: 20px;
 }
 
+
+.location image {
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+}
 .location-arrow {
   font-size: 12px;
   margin-left: 4px;
@@ -56,14 +63,15 @@
 
 /* 天气信息 */
 .weather {
+  font-size: 16px;
   position: relative;
   display: flex;
   align-items: center;
   margin-left: 20px;
 }
 .weather image {
-  width: 17.5px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   margin-right: 4px;
 }
 

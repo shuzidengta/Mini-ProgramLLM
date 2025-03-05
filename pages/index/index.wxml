@@ -9,7 +9,8 @@
     <!-- 当前定位 -->
     <view class="location">
       <text>成都</text>
-      <text class="location-arrow">▼</text>
+      <image src="../images/narrow_down.png" mode="aspectFit"/>
+      <!-- <text class="location-arrow">▼</text> -->
     </view>
 
     <!-- 当前天气 -->
@@ -27,7 +28,7 @@
           <view class="text-container">
             <view class="title">嗨！</view>
             <view class="subtitle">我是"小团"</view>
-            <view class="description">可以约车/购买汽车票/火车票/机票/景门票/制定行程，快来对话吧</view>
+            <view class="description">可以约车/买汽车票/火车票/机票/景门票/制定行程等等，快来对话吧</view>
           </view>
           <view class="panda-container">
             <image src="../images/panda1.gif" mode="aspectFit"/>

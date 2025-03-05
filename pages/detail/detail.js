@@ -16,6 +16,7 @@ Page({
       打车: 'taxi',
       出租车: 'taxi',
       机场大巴: 'bus',
+      公交车:'gongjiao',
       汽车: 'bus',
       地铁: 'subway',
       subway: 'subway',
