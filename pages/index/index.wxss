@@ -79,6 +79,7 @@
 }
 
 .text-container {
+  margin-top: 10px;
   flex: 1;
   padding-right: 20px;
 }
@@ -101,7 +102,8 @@
   line-height: 1.5;
 }
 
-.panda-container {
+.panda-container {  
+  margin-top:10px;
   width: 120px;
   height: 120px;
   flex-shrink: 0;

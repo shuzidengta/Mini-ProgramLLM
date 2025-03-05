@@ -88,14 +88,22 @@ Page({
 
   sendToBackend(message) {
     const contextHistory = this.data.contextHistory;
+    
+    // 限制历史记录长度，只保留最近的几条对话
+    if (contextHistory.length > 10) {  // 比如保留最近5轮对话
+      contextHistory.splice(0, 2);  // 每次删除最早的一轮对话（一问一答）
+    }
+    
+    // 添加用户消息到上下文历史
     contextHistory.push({
       role: 'user',
       content: message
     });
 
-    this.manageContextHistory();
-    
-    this.setData({ isLoading: true });
+    this.setData({ 
+      isLoading: true,
+      contextHistory
+    });
     
     // 添加重试机制
     const maxRetries = 3;
@@ -103,7 +111,7 @@ Page({
     
     const makeRequest = () => {
       wx.request({
-        url: 'http://localhost:8000/chat',
+        url: 'http://localhost:8000/chat1',
         method: 'POST',
         data: {
           message: message,
@@ -114,44 +122,103 @@ Page({
         },
         timeout: 30000, // 增加超时时间到30秒
         success: (res) => {
-          console.log('后端返回数据:', res.data);
-          if (res.data && res.data.response) {
+          if (res.statusCode === 200 && res.data && res.data.response) {
             try {
-              let cleanResponse = res.data.response.replace(/\\n/g, '').replace(/\s+/g, ' ').trim();
-              let responseData = typeof cleanResponse === 'string' ? 
-                JSON.parse(cleanResponse) : cleanResponse;
+              // 清理和格式化 JSON 字符串
+              let cleanResponse = res.data.response
+                .replace(/\s+/g, ' ')  // 替换多个空白字符为单个空格
+                .replace(/\\n/g, '')   // 移除换行符
+                .trim();               // 移除首尾空白
+
+              // 尝试修复常见的 JSON 格式错误
+              if (cleanResponse.indexOf('_name"') !== -1) {  // 使用 indexOf 替代 includes
+                cleanResponse = cleanResponse.replace(/_name"/g, 'name"');
+              }
+
+              // 尝试解析为 JSON
+              const responseData = JSON.parse(cleanResponse);
               
-              console.log('解析后的数据:', responseData);
-              
+              // 添加助手回复到上下文历史
               contextHistory.push({
                 role: 'assistant',
                 content: cleanResponse
               });
+              
+              if (responseData.plans && responseData.summary) {
+                // 确保 plans 是有效的数组
+                const plans = Array.isArray(responseData.plans) ? responseData.plans : [];
+                
+                // 规范化计划数据，添加起点和终点信息
+                const normalizedPlans = plans.map((plan, index) => ({
+                  plan_id: plan.plan_id || (index + 1),
+                  plan_name: plan.plan_name || `方案${index + 1}`,
+                  travel_way: plan.travel_way || '',
+                  cost: plan.cost || '待定',
+                  time: plan.time || '待定',
+                  hotel: plan.hotel || '',
+                  advice: plan.advice || '',
+                  // 添加起点和终点信息
+                  start: responseData.start || '',
+                  end: responseData.end || ''
+                }));
 
-              if (responseData && responseData.plans && Array.isArray(responseData.plans)) {
-                const newMessage = {
-                  id: Date.now().toString(),
-                  type: 'bot',
-                  isSummary: true,
-                  content: responseData.summary || '',
-                  plans: responseData.plans
-                };
+                // 添加调试日志
+                console.log('规范化后的计划数据:', normalizedPlans);
 
-                this.setData({ 
-                  contextHistory,
-                  messages: [...this.data.messages, newMessage],
-                  scrollToMessage: newMessage.id,
-                  isLoading: false
-                });
+                // 添加消息
+                if (responseData.summary) {
+                  const summaryMessage = {
+                    id: Date.now().toString(),
+                    type: 'assistant',
+                    content: responseData.summary,
+                    isSummary: true,
+                    plans: normalizedPlans,
+                    // 在消息级别也保存起点和终点信息
+                    start: responseData.start,
+                    end: responseData.end
+                  };
+                  
+                  this.setData({
+                    messages: [...this.data.messages, summaryMessage],
+                    scrollToMessage: summaryMessage.id,
+                    isLoading: false,
+                    contextHistory
+                  });
+                }
               } else {
-                this.addMessage('bot', cleanResponse);
-                this.setData({ isLoading: false });
+                // 如果不是计划数据，直接添加到聊天记录
+                this.addMessage('assistant', res.data.response);
+                this.setData({ 
+                  isLoading: false,
+                  contextHistory
+                });
               }
-            } catch (error) {
-              console.error('解析计划数据失败:', error);
-              this.addMessage('bot', '抱歉，服务器返回的数据格式有误，请重试');
-              this.setData({ isLoading: false });
+            } catch (e) {
+              console.error('JSON解析错误:', e);
+              console.error('原始响应:', res.data.response);
+              
+              // 如果解析 JSON 失败，作为普通文本处理
+              this.addMessage('assistant', res.data.response);
+              
+              contextHistory.push({
+                role: 'assistant',
+                content: res.data.response
+              });
+              
+              this.setData({ 
+                isLoading: false,
+                contextHistory
+              });
             }
+          } else {
+            wx.showToast({
+              title: res.data.error || '获取回答失败',
+              icon: 'none'
+            });
+            this.setData({ 
+              isLoading: false,
+              contextHistory
+            });
           }
         },
         fail: (error) => {
@@ -168,7 +235,7 @@ Page({
               icon: 'error',
               duration: 2000
             });
-            this.addMessage('bot', '抱歉，网络连接出现问题，请稍后重试');
+            this.addMessage('assistant', '抱歉，网络连接出现问题，请稍后重试');
             this.setData({ isLoading: false });
           }
         }
@@ -197,9 +264,39 @@ Page({
   onBack() {
     wx.navigateBack();
   },
-  onDetailsButtonTap(){
+  onDetailsButtonTap(e) {
+    const planData = e.currentTarget.dataset.planData;
+    console.log('计划数据:', planData);  // 添加日志查看数据
+    
+    const params = {
+      start: planData.start || '',
+      end: planData.end || '',
+      travel_way: planData.travel_way || ''
+    };
+    
+    console.log('跳转参数:', params);  // 添加日志查看参数
+    
+    // 检查必要参数是否存在
+    if (!params.travel_way) {
+      wx.showToast({
+        title: '出行方式数据缺失',
+        icon: 'none'
+      });
+      return;
+    }
+
+    // 构建跳转 URL
+    const url = `/pages/detail/detail?start=${params.start}&end=${params.end}&travel_way=${params.travel_way}`;
+
     wx.navigateTo({
-      url: `/pages/detail/detail`
+      url: url,
+      fail: (err) => {
+        console.error('页面跳转失败:', err);
+        wx.showToast({
+          title: '页面跳转失败',
+          icon: 'none'
+        });
+      }
     });
   }
-});
+});    

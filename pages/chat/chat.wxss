@@ -137,7 +137,7 @@
 .plan-card {
   background: #FFFFFF;
   border-radius: 12px;
-  padding: 16px;
+  padding: 24rpx;
   margin-bottom: 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   border: 1px solid #E5E7EB;
@@ -309,4 +309,63 @@
   40% { 
     transform: scale(1.0);
   }
+}
+
+/* 建议信息样式优化 */
+.attractions-info {
+  margin-top: 16rpx;
+  padding: 16rpx;
+  background-color: #F8F9FA;
+  border-radius: 8rpx;
+}
+
+.tips-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.tips-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 0rpx;
+}
+
+.tips-text {
+  color: #666;
+  font-size: 28rpx;
+}
+
+.advice-text {
+  color: #666;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
+.attractions-info text {
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+/* 如果建议内容较长，确保有合适的间距 */
+.attractions-info:last-child {
+  margin-bottom: 8rpx;
+}
+
+/* 温馨提示样式优化 */
+.tips-container {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #999;
+  margin-top: 8px;
+}
+
+.tips-label {
+  color: #999;
+  margin-right: 4px;
+}
+
+.tips-content {
+  color: #666;
 }

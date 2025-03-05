@@ -15,7 +15,7 @@
     <!-- 当前天气 -->
     <view class="weather">
       <image src="../images/weather.png" mode="aspectFit"/>
-      <text> 20℃</text>
+      <text> 16℃</text>
     </view>
   </view>
 
@@ -26,8 +26,8 @@
         <view class="header-content">
           <view class="text-container">
             <view class="title">嗨！</view>
-            <view class="subtitle">我是"团子"</view>
-            <view class="description">可以帮你约车/购买汽车票/火车票/机票/景区门票/制定行程，快跟我对话吧</view>
+            <view class="subtitle">我是"小团"</view>
+            <view class="description">可以约车/购买汽车票/火车票/机票/景门票/制定行程，快来对话吧</view>
           </view>
           <view class="panda-container">
             <image src="../images/panda1.gif" mode="aspectFit"/>

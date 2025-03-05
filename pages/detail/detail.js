@@ -3,39 +3,159 @@ Page({
   data: {
     customNavbarStyle: '',
     navBarHeight: 0,
-    plan: null,
-    totalCost: 0
+    itinerary: null,
+    totalCost: 0,
+    start:'',
+    end:'',
+    travelWay:'',
+    // 添加loading状态
+    isLoading: true,
+    // 添加图标映射配置
+    iconMap: {
+      网约车: 'taxi',
+      出租车: 'taxi',
+      机场大巴: 'bus',
+      汽车: 'bus',
+      地铁: 'subway',
+      subway: 'subway',
+      火车: 'train',
+      飞机: 'airplane',
+      flight:'airplane',
+      步行: 'walk',
+      酒店: 'hotel',
+      hotel: 'hotel'
+      // 可以根据需要添加更多类型
+    }
   },
 
   onLoad(options) {
     // 设置导航栏样式
     this.setNavBarStyle();
+    // 解析传入的参数
+    const start = decodeURIComponent(options.start || '');
+    const end = decodeURIComponent(options.end || '');
+    const travelWay = decodeURIComponent(options.travel_way || '');
+    console.log(start,end,travelWay)
     
-    // 解析传入的方案数据
-    if (options.plan) {
-      const plan = JSON.parse(decodeURIComponent(options.plan));
-      this.setData({ 
-        plan,
-        totalCost: this.calculateTotalCost(plan)
-      });
-    }
+    //向后端发起请求
+    wx.request({
+      url: 'http://localhost:8000/chat2',  
+      method: 'POST',
+      header: {
+        'content-type': 'application/json'
+      },
+      data: {
+        message: JSON.stringify({
+          start: start,
+          end: end,
+          travel_way: travelWay
+        }),
+        context: [] // 如果需要上下文，可以在这里添加历史对话
+      },
+      success: (res) => {
+        if (res.statusCode === 200 && res.data && res.data.response) {
+          try {
+            // 尝试解析为 JSON
+            const responseData = JSON.parse(res.data.response);
+            // 如果是行程数据，设置行程信息
+            if (responseData.itinerary) {
+              this.setData({ 
+                itinerary: responseData.itinerary,
+                start: start,
+                end: end,
+                travelWay: travelWay,
+                isLoading: false
+              });
+              this.calculateTotalCost();
+            } else {
+              // 如果不是行程数据，显示错误提示
+              wx.showToast({
+                title: '返回数据格式错误',
+                icon: 'none'
+              });
+              this.setData({ isLoading: false });
+            }
+          } catch (e) {
+            console.error('解析响应数据失败:', e);
+            wx.showToast({
+              title: '数据解析失败',
+              icon: 'none'
+            });
+            this.setData({ isLoading: false });
+          }
+        } else {
+          wx.showToast({
+            title: res.data.error || '获取行程数据失败',
+            icon: 'none'
+          });
+          this.setData({ isLoading: false });
+        }
+      },
+      fail: (error) => {
+        console.error('请求失败:', error);
+        wx.showToast({
+          title: '网络请求失败',
+          icon: 'none'
+        });
+        this.setData({ isLoading: false });
+      }
+    });
+    
+    // 模拟从后端获取数据
+    // 实际项目中应该通过 API 请求获取
+    /*
+    const mockData = {
+      itinerary: {
+        total_price: "预估",
+        segments: [
+          {
+            type: "online_car",
+            icon: "online_car",
+            price: "35",
+            price_unit: "人",
+            departure: {
+              time: "2025-01-15 09:30",
+              location: "成都绿地之窗"
+            },
+            arrival: {
+              location: "双流机场"
+            },
+            duration: "1小时05分钟",
+            notice: "请提前准备好，以免误机"
+          }
+        ]
+      }
+    };
+
+    this.setData({ 
+      itinerary: mockData.itinerary
+    });
+    */
+    // 计算总价
+    this.calculateTotalCost();
   },
 
-  calculateTotalCost(plan) {
+  calculateTotalCost() {
+    if (!this.data.itinerary || !this.data.itinerary.segments) {
+      return;
+    }
+
     let total = 0;
-    // 网约车费用
-    if (plan.travel_way.includes('online_car')) {
-      total += 35;
-    }
-    // 机票费用
-    if (plan.travel_way.includes('bullet_train')) {
-      total += 1000;
-    }
-    // 酒店费用
-    if (plan.hotel) {
-      total += 400;
-    }
-    return total;
+    this.data.itinerary.segments.forEach(segment => {
+      const price = parseFloat(segment.price);
+      if (!isNaN(price)) {
+        if (segment.type === 'hotel') {
+          // 酒店需要乘以住宿天数
+          total += price * segment.duration.nights;
+        } else {
+          total += price;
+        }
+      }
+    });
+
+    this.setData({
+      totalCost: total
+    });
   },
 
   setNavBarStyle() {
@@ -70,13 +190,26 @@ Page({
   onConfirm() {
     wx.showToast({
       title: '预订成功',
-      icon: 'success',
-      duration: 2000
+      icon: 'success'
     });
-    setTimeout(() => {
-      wx.navigateBack({
-        delta: 2  // 返回上两级页面
-      });
-    }, 2000);
+  },
+  
+  // 编辑行程段
+  onEditSegment(e) {
+    const index = e.currentTarget.dataset.index;
+    const segment = this.data.itinerary.segments[index];
+    
+    wx.showToast({
+      title: '编辑功能开发中',
+      icon: 'none'
+    });
+    
+    // 这里可以跳转到编辑页面或显示编辑弹窗
+    // 例如：
+    /*
+    wx.navigateTo({
+      url: `/pages/edit/edit?index=${index}&type=${segment.type}`
+    });
+    */
   }
 });

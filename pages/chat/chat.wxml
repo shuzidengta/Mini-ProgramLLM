@@ -30,9 +30,9 @@
                   <view class="plan-tag" wx:if="{{plan.plan_id === 1}}">推荐</view>
                   <view class="plan-tag economy" wx:elif="{{plan.plan_id === 2}}">性价比</view>
                   <view class="plan-tag budget" wx:elif="{{plan.plan_id === 3}}">经济型</view>
-                  <view class="details-button" bindtap="onDetailsButtonTap">详情</view>
+                  <view class="details-button" data-plan-data="{{plan}}" bindtap="onDetailsButtonTap">详情</view>
                 </view>
-                
+                 
                 <view class="travel-way">
                   <text>{{plan.travel_way}}</text>
                 </view>
@@ -57,9 +57,17 @@
                   <text>{{plan.hotel}}</text>
                 </view>
                 
-                <view class="attractions-info" wx:if="{{plan.advice}}">
-                  <image src="../images/tips.png" mode="aspectFit"/>
-                  <text>{{plan.advice}}</text>
+                <view class="attractions-info">
+                  <view class="tips-row">
+                    <image class="tips-icon" src="../images/tips.png" mode="aspectFit"/>  
+                  </view>
+                  <text class="advice-text">{{plan.advice}}</text>
+                </view>
+
+                <!-- 温馨提示部分 -->
+                <view class="tips-container">
+                  <text class="tips-label">温馨提示：</text>
+                  <text class="tips-content">{{plan.tips}}</text>
                 </view>
               </view>
             </block>
