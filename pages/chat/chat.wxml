@@ -12,7 +12,8 @@
   <!-- 聊天内容区域 -->
   <scroll-view class="chat-container" scroll-y="true" 
                scroll-into-view="{{scrollToMessage}}" 
-               scroll-with-animation="true">
+               scroll-with-animation="true"
+               scroll-anchoring="true">
     <view class="message-list">
       <view wx:for="{{messages}}" wx:key="id" class="message {{item.type}}" id="{{item.id}}">
         <block wx:if="{{!item.isPlan && !item.isSummary}}">

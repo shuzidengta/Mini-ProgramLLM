@@ -62,14 +62,25 @@ Page({
       return;
     }
     
-    this.addMessage('user', content);
-    this.setData({ inputValue: '' });
-    this.sendToBackend(content);
+    const userMessage = {
+      id: `msg-${Date.now()}`,
+      type: 'user',
+      content: content
+    };
+
+    this.setData({
+      messages: [...this.data.messages, userMessage],
+      inputValue: '',
+      isLoading: true
+    }, () => {
+      this.scrollToBottom(); // 发送消息后滚动
+      this.sendToBackend(content); // 在回调中发送到后端
+    });
   },
 
   addMessage(type, content) {
     const messages = this.data.messages;
-    const id = Date.now().toString();
+    const id = `msg-${Date.now()}`;
     messages.push({
       id,
       type,
@@ -79,6 +90,8 @@ Page({
     this.setData({ 
       messages,
       scrollToMessage: id
+    }, () => {
+      this.scrollToBottom();
     });
   },
 
@@ -298,5 +311,15 @@ Page({
         });
       }
     });
-  }
+  },
+
+  scrollToBottom() {
+    const messages = this.data.messages;
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      this.setData({
+        scrollToMessage: lastMessage.id
+      });
+    }
+  },
 });    
