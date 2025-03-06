@@ -183,38 +183,30 @@ Page({
     });
   },
   onPaymentConfirm() {
-    if (!this.data.password) {
+    if (this.data.password.length !== 6) {
       wx.showToast({
-        title: '请输入支付密码',
+        title: '请输入6位支付密码',
         icon: 'none'
       });
       return;
     }
     
-    // 显示加载中
     wx.showLoading({
       title: '支付处理中...',
     });
 
     // 模拟支付过程
-    this.simulatePayment().then((result) => {
+    setTimeout(() => {
       wx.hideLoading();
-      if (result === 'success') {
-        this.setData({
-          isPaymentModalVisible: false,
-          password: '' // 清空密码
-        });
-        wx.showToast({
-          title: '支付成功',
-          icon: 'success'
-        });
-      } else {
-        wx.showToast({
-          title: '支付失败',
-          icon: 'none'
-        });
-      }
-    });
+      this.setData({
+        isPaymentModalVisible: false,
+        password: '' // 清空密码
+      });
+      wx.showToast({
+        title: '支付成功',
+        icon: 'success'
+      });
+    }, 1500);
   },
   simulatePayment() {
     return new Promise((resolve) => {
