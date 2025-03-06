@@ -27,7 +27,9 @@ Page({
       酒店: 'hotel',
       hotel: 'hotel'
       // 可以根据需要添加更多类型
-    }
+    },
+    isPaymentModalVisible: false,
+    password: ''
   },
 
   onLoad(options) {
@@ -103,36 +105,6 @@ Page({
       }
     });
     
-    // 模拟从后端获取数据
-    // 实际项目中应该通过 API 请求获取
-    /*
-    const mockData = {
-      itinerary: {
-        total_price: "预估",
-        segments: [
-          {
-            type: "online_car",
-            icon: "online_car",
-            price: "35",
-            price_unit: "人",
-            departure: {
-              time: "2025-01-15 09:30",
-              location: "成都绿地之窗"
-            },
-            arrival: {
-              location: "双流机场"
-            },
-            duration: "1小时05分钟",
-            notice: "请提前准备好，以免误机"
-          }
-        ]
-      }
-    };
-
-    this.setData({ 
-      itinerary: mockData.itinerary
-    });
-    */
     // 计算总价
     this.calculateTotalCost();
   },
@@ -190,9 +162,66 @@ Page({
   },
 
   onConfirm() {
-    wx.showToast({
-      title: '预订成功',
-      icon: 'success'
+        // 显示支付弹窗
+        this.setData({
+          isPaymentModalVisible: true
+        });
+    // wx.showToast({
+    //   title: '预订成功',
+    //   icon: 'success'
+    // });
+  },
+  onPasswordInput(e) {
+    this.setData({
+      password: e.detail.value
+    });
+  },
+  onPaymentCancel() {
+    this.setData({
+      isPaymentModalVisible: false,
+      password: '' // 清空密码
+    });
+  },
+  onPaymentConfirm() {
+    if (!this.data.password) {
+      wx.showToast({
+        title: '请输入支付密码',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    // 显示加载中
+    wx.showLoading({
+      title: '支付处理中...',
+    });
+
+    // 模拟支付过程
+    this.simulatePayment().then((result) => {
+      wx.hideLoading();
+      if (result === 'success') {
+        this.setData({
+          isPaymentModalVisible: false,
+          password: '' // 清空密码
+        });
+        wx.showToast({
+          title: '支付成功',
+          icon: 'success'
+        });
+      } else {
+        wx.showToast({
+          title: '支付失败',
+          icon: 'none'
+        });
+      }
+    });
+  },
+  simulatePayment() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const paymentResult ='success'; 
+        resolve(paymentResult);
+      }, 2000);
     });
   },
   

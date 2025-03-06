@@ -14,5 +14,8 @@
   "componentFramework": "glass-easel",
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents",
-  "navigationStyle": "custom"
+  "navigationStyle": "custom",
+  "useExtendedLib": {
+    "weui": true
+  }
 }

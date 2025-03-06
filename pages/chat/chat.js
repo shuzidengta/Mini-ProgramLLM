@@ -137,90 +137,79 @@ Page({
         success: (res) => {
           if (res.statusCode === 200 && res.data && res.data.response) {
             try {
-              // 清理和格式化 JSON 字符串
-              let cleanResponse = res.data.response
-                .replace(/\s+/g, ' ')  // 替换多个空白字符为单个空格
-                .replace(/\\n/g, '')   // 移除换行符
-                .trim();               // 移除首尾空白
+              // 1. 首先判断响应是否已经是对象
+              let responseData = typeof res.data.response === 'object' 
+                ? res.data.response 
+                : JSON.parse(res.data.response);
 
-              // 尝试修复常见的 JSON 格式错误
-              if (cleanResponse.indexOf('_name"') !== -1) {  // 使用 indexOf 替代 includes
-                cleanResponse = cleanResponse.replace(/_name"/g, 'name"');
-              }
-
-              // 尝试解析为 JSON
-              const responseData = JSON.parse(cleanResponse);
-              
-              // 添加助手回复到上下文历史
-              contextHistory.push({
+              // 2. 添加助手回复到上下文历史
+              this.data.contextHistory.push({
                 role: 'assistant',
-                content: cleanResponse
+                content: typeof res.data.response === 'string' 
+                  ? res.data.response 
+                  : JSON.stringify(res.data.response)
               });
-              
+
+              // 3. 判断是否包含行程规划数据
               if (responseData.plans && responseData.summary) {
-                // 确保 plans 是有效的数组
+                // 确保 plans 是数组
                 const plans = Array.isArray(responseData.plans) ? responseData.plans : [];
                 
-                // 规范化计划数据，添加起点和终点信息
+                // 规范化计划数据
                 const normalizedPlans = plans.map((plan, index) => ({
-                  plan_id: plan.plan_id || (index + 1),
+                  plan_id: parseInt(plan.plan_id || (index + 1)),
                   plan_name: plan.plan_name || `方案${index + 1}`,
                   travel_way: plan.travel_way || '',
                   cost: plan.cost || '待定',
                   time: plan.time || '待定',
                   hotel: plan.hotel || '',
                   advice: plan.advice || '',
-                  // 添加起点和终点信息
                   start: responseData.start || '',
                   end: responseData.end || ''
                 }));
 
-                // 添加调试日志
-                console.log('规范化后的计划数据:', normalizedPlans);
-
                 // 添加消息
-                if (responseData.summary) {
-                  const summaryMessage = {
-                    id: Date.now().toString(),
-                    type: 'assistant',
-                    content: responseData.summary,
-                    isSummary: true,
-                    plans: normalizedPlans,
-                    // 在消息级别也保存起点和终点信息
-                    start: responseData.start,
-                    end: responseData.end
-                  };
-                  
-                  this.setData({
-                    messages: [...this.data.messages, summaryMessage],
-                    scrollToMessage: summaryMessage.id,
-                    isLoading: false,
-                    contextHistory
-                  });
-                }
+                const summaryMessage = {
+                  id: Date.now().toString(),
+                  type: 'assistant',
+                  content: responseData.summary,
+                  isSummary: true,
+                  plans: normalizedPlans,
+                  start: responseData.start || '',
+                  end: responseData.end || ''
+                };
+
+                this.setData({
+                  messages: [...this.data.messages, summaryMessage],
+                  scrollToMessage: summaryMessage.id,
+                  isLoading: false,
+                  contextHistory: this.data.contextHistory
+                });
               } else {
-                // 如果不是计划数据，直接添加到聊天记录
-                this.addMessage('assistant', res.data.response);
+                // 普通文本消息处理
+                const content = typeof responseData === 'string' 
+                  ? responseData 
+                  : responseData.text || JSON.stringify(responseData);
+                
+                this.addMessage('assistant', content);
                 this.setData({ 
                   isLoading: false,
-                  contextHistory
+                  contextHistory: this.data.contextHistory
                 });
               }
             } catch (e) {
               console.error('JSON解析错误:', e);
               console.error('原始响应:', res.data.response);
               
-              // 如果解析 JSON 失败，作为普通文本处理
-              this.addMessage('assistant', res.data.response);
+              // 作为普通文本处理
+              const content = typeof res.data.response === 'string' 
+                ? res.data.response 
+                : '抱歉，处理响应时出现错误';
               
-              contextHistory.push({
-                role: 'assistant',
-                content: res.data.response
-              });
-              
+              this.addMessage('assistant', content);
               this.setData({ 
                 isLoading: false,
-                contextHistory
+                contextHistory: this.data.contextHistory
               });
             }
           } else {
@@ -322,4 +311,132 @@ Page({
       });
     }
   },
+
+  playAudio: function(e) {
+    const text = e.currentTarget.dataset.text;
+    const messageId = e.currentTarget.dataset.messageId;
+    
+    // 添加调试日志
+    console.log('Playing audio for message:', {
+      messageId: messageId,
+      text: text
+    });
+    
+    // 显示加载提示
+    wx.showLoading({
+      title: '小团子清清嗓子...',
+    });
+    wx.request({
+      url: 'https://openspeech.bytedance.com/api/v1/tts',
+      method: 'POST',
+      header: {
+        'Authorization': 'Bearer;AF7yJGjrR2cAtpryQklhUTQ6QztMawPk',
+        'Content-Type': 'application/json'
+      },
+      data: {
+        "app": {
+          "appid": "4980145082",
+          "token": "AF7yJGjrR2cAtpryQklhUTQ6QztMawPk",
+          "cluster": "volcano_tts"
+        },
+        "user": {
+          "uid": "uid123"
+        },
+        "audio": {
+          "voice_type": "BV700_streaming",
+          "encoding": "mp3",
+          "compression_rate": 1,
+          "rate": 24000,
+          "speed_ratio": 1.0,
+          "volume_ratio": 1.0,
+          "pitch_ratio": 1.0,
+          "emotion": "happy",
+          "language": "cn"
+        },
+        "request": {
+          "reqid": Date.now().toString(),
+          "text": text,
+          "text_type": "plain",
+          "operation": "query",
+          "silence_duration": "125",
+          "with_frontend": "1",
+          "frontend_type": "unitTson",
+          "pure_english_opt": "1"
+        }
+      },
+      success: (res) => {
+        wx.hideLoading();
+        if (res.data.data) {
+          // 获取 base64 音频数据
+          const base64Audio = res.data.data;
+          
+          // 将 base64 转换为本地临时文件
+          const fsm = wx.getFileSystemManager();
+          const FILE_PATH = `${wx.env.USER_DATA_PATH}/temp_audio_${messageId}.mp3`;
+          
+          try {
+            // 写入文件
+            fsm.writeFileSync(
+              FILE_PATH,
+              base64Audio,
+              'base64'
+            );            
+            // 创建音频实例
+            const innerAudioContext = wx.createInnerAudioContext();
+            innerAudioContext.src = FILE_PATH;
+            
+            // 监听错误
+            innerAudioContext.onError((err) => {
+              console.error('音频播放错误:', err);
+              wx.showToast({
+                title: '播放失败',
+                icon: 'none'
+              });
+            });
+            
+            // 开始播放
+            innerAudioContext.play();
+            
+            // 监听播放开始
+            innerAudioContext.onPlay(() => {
+              console.log('音频开始播放');
+            });
+            
+            // 监听播放结束
+            innerAudioContext.onEnded(() => {
+         
+              // 播放结束后清理临时文件
+              fsm.unlink({
+                filePath: FILE_PATH,
+                success: () => {
+                  console.log('临时音频文件删除成功:', FILE_PATH);
+                }
+              });
+              innerAudioContext.destroy(); // 销毁音频实例
+            });
+            
+          } catch (error) {
+            console.error('文件处理错误:', error);
+            wx.showToast({
+              title: '音频处理失败',
+              icon: 'none'
+            });
+          }
+        } else {
+          wx.showToast({
+            title: '未获取到音频数据',
+            icon: 'none'
+          });
+        }
+      },
+      fail: (error) => {
+        wx.hideLoading();
+        console.error('请求失败:', error);
+        wx.showToast({
+          title: '语音合成失败',
+          icon: 'none'
+        });
+      }
+    });
+  }
 });    

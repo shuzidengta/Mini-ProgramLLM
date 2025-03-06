@@ -357,3 +357,50 @@
 .tips-content {
   color: #666;
 }
+
+.audio-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.audio-button {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:#c0eba7;
+  cursor: pointer;
+  flex-shrink: 0;  /* 防止按钮被压缩 */
+}
+
+.audio-button image {
+  width: 32px;  /* 调整图标大小 */
+  height: 32px;
+}
+
+.message-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;  /* 添加相对定位 */
+  padding-right: 40px;  /* 为按钮留出空间 */
+}
+
+.message-text-container {
+  position: relative;
+  width: 100%;
+}
+
+.audio-button-top-right {
+  position: absolute;
+  left: 300px;
+  top: -25px;
+  right: 0;
+  padding: 5px;
+}
+
+.audio-button-top-right image {
+  width: 35px;
+  height: 35px;
+}
