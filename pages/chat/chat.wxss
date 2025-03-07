@@ -52,7 +52,7 @@
   right: 0;
   padding: 10px 16px;
   background-color: #ffffff;
-  border-top: 1px solid #e0e0e0;
+  border-top: none;
   height: 65px;
   box-sizing: border-box;
 }
@@ -403,4 +403,36 @@
 .audio-button-top-right image {
   width: 35px;
   height: 35px;
+}
+
+/* 自动播报开关样式 */
+.auto-play-switch {
+  height: 30px;
+  position: fixed;
+  bottom: 65px;
+  left: 0;
+  right: 0;
+  padding: 8px 16px;
+  background: #fff;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.switch-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.switch-label image {
+  margin-top: 10px;
+  width: 40px;
+  height: 40px;
+}
+
+.switch-label text {
+  font-size: 14px;
+  color: #666;
 }

@@ -108,18 +108,7 @@
       </view>
       <view class="modal-body">
         <!-- 密码输入框容器 -->
-        <view class="password-container">
-          <view class="password-box" wx:for="{{6}}" wx:key="index">
-            <text wx:if="{{password.length > index}}">•</text>
-          </view>
-          <input class="password-input" 
-                 type="number" 
-                 password="true"
-                 maxlength="6"
-                 focus="{{isPaymentModalVisible}}"
-                 bindinput="onPasswordInput"
-                 value="{{password}}"/>
-        </view>
+ 
       </view>
       <view class="modal-footer">
         <view class="cancel-btn" bindtap="onPaymentCancel">取消</view>

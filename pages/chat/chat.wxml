@@ -102,6 +102,15 @@
     </view>
   </scroll-view>
 
+  <!-- 在输入框上方添加自动播报开关 -->
+  <view class="auto-play-switch">
+    <view class="switch-label">
+      <image src="../images/audio.png" mode="aspectFit"/>
+      <text>自动语音播报</text>
+    </view>
+    <switch checked="{{autoPlay}}" bindchange="onAutoPlayChange" color="#4285f4"/>
+  </view>
+
   <!-- 底部输入区域 -->
   <view class="input-container">
     <view class="input-wrapper">

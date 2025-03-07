@@ -6,7 +6,8 @@ Page({
     customNavbarStyle: '',
     scrollToMessage: '',
     contextHistory: [],
-    isLoading: false
+    isLoading: false,
+    autoPlay: false
   },
 
   onLoad(options) {
@@ -19,6 +20,10 @@ Page({
     
     // 设置导航栏样式
     this.setNavBarStyle();
+    
+    // 从本地存储读取自动播放设置
+    const autoPlay = wx.getStorageSync('autoPlay') || false;
+    this.setData({ autoPlay });
   },
 
   setNavBarStyle() {
@@ -92,6 +97,18 @@ Page({
       scrollToMessage: id
     }, () => {
       this.scrollToBottom();
+      
+      // 如果是系统回复且开启了自动播放，则播放语音
+      if (type === 'assistant' && this.data.autoPlay) {
+        this.playAudio({
+          currentTarget: {
+            dataset: {
+              text: content,
+              messageId: id
+            }
+          }
+        });
+      }
     });
   },
 
@@ -137,7 +154,6 @@ Page({
         success: (res) => {
           if (res.statusCode === 200 && res.data && res.data.response) {
             try {
-              // 1. 首先判断响应是否已经是对象
               let responseData = typeof res.data.response === 'object' 
                 ? res.data.response 
                 : JSON.parse(res.data.response);
@@ -184,14 +200,41 @@ Page({
                   scrollToMessage: summaryMessage.id,
                   isLoading: false,
                   contextHistory: this.data.contextHistory
+                }, () => {
+                  // 在消息添加完成后，如果开启了自动播放，则播放语音
+                  if (this.data.autoPlay) {
+                    this.playAudio({
+                      currentTarget: {
+                        dataset: {
+                          text: responseData.summary,
+                          messageId: summaryMessage.id
+                        }
+                      }
+                    });
+                  }
                 });
+                
               } else {
                 // 普通文本消息处理
                 const content = typeof responseData === 'string' 
                   ? responseData 
                   : responseData.text || JSON.stringify(responseData);
                 
+                const messageId = Date.now().toString();
                 this.addMessage('assistant', content);
+                
+                // 在消息添加完成后，如果开启了自动播放，则播放语音
+                if (this.data.autoPlay) {
+                  this.playAudio({
+                    currentTarget: {
+                      dataset: {
+                        text: content,
+                        messageId: messageId
+                      }
+                    }
+                  });
+                }
+
                 this.setData({ 
                   isLoading: false,
                   contextHistory: this.data.contextHistory
@@ -322,10 +365,10 @@ Page({
       text: text
     });
     
-    // 显示加载提示
-    wx.showLoading({
-      title: '小团子清清嗓子...',
-    });
+    // // 显示加载提示
+    // wx.showLoading({
+    //   title: '小团子清清嗓子...',
+    // });
     wx.request({
       url: 'https://openspeech.bytedance.com/api/v1/tts',
       method: 'POST',
@@ -438,5 +481,14 @@ Page({
         });
       }
     });
+  },
+
+  // 添加开关切换处理方法
+  onAutoPlayChange(e) {
+    this.setData({
+      autoPlay: e.detail.value
+    });
+    // 保存设置到本地存储
+    wx.setStorageSync('autoPlay', e.detail.value);
   }
 });    
