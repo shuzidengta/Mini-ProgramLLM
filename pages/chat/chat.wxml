@@ -20,7 +20,7 @@
           <view class="message-content">
             <view class="message-text-container">
               <text>{{item.content}}</text>
-              <view wx:if="{{item.type === 'assistant'}}" 
+              <view wx:if="{{item.type === 'assistant' && !autoPlay}}" 
                     class="audio-button-top-right" 
                     bindtap="playAudio" 
                     data-text="{{item.content}}"
@@ -34,7 +34,7 @@
           <view class="plan-summary">
             <view class="message-text-container">
               <text>{{item.content}}</text>
-              <view class="audio-button-top-right" 
+              <view wx:if="{{!autoPlay}}" class="audio-button-top-right" 
                     bindtap="playAudio" 
                     data-text="{{item.content}}"
                     data-message-id="{{item.id}}">
