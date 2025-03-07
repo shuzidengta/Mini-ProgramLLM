@@ -426,7 +426,7 @@
   gap: 6px;
 }
 
-.switch-label image {
+.switch-label image { 
   margin-top: 10px;
   width: 40px;
   height: 40px;
@@ -435,4 +435,10 @@
 .switch-label text {
   font-size: 14px;
   color: #666;
+}
+
+/* 调整输入框容器的底部边距，为开关留出空间 */
+.input-container {
+  bottom: 0;
+  border-top: none;
 }
