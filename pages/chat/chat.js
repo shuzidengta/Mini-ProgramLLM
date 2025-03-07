@@ -7,7 +7,10 @@ Page({
     scrollToMessage: '',
     contextHistory: [],
     isLoading: false,
-    autoPlay: false
+    autoPlay: false,
+    isPlaying: false,
+    audioQueue: [],
+    currentAudioContext: null  // 新增：保存当前播放的音频实例
   },
 
   onLoad(options) {
@@ -359,16 +362,27 @@ Page({
     const text = e.currentTarget.dataset.text;
     const messageId = e.currentTarget.dataset.messageId;
     
-    // 添加调试日志
-    console.log('Playing audio for message:', {
-      messageId: messageId,
-      text: text
-    });
+    // 如果当前正在播放，检查是否已在队列中
+    if (this.data.isPlaying) {
+      // 检查是否已经在队列中
+      const isDuplicate = this.data.audioQueue.some(item => 
+        item.messageId === messageId
+      );
+      
+      if (!isDuplicate) {
+        this.data.audioQueue.push({ text, messageId });
+      } else {
+        wx.showToast({
+          title: '你点的太快啦',
+          icon: 'none',
+          duration: 1000
+        });
+      }
+      return;
+    }
     
-    // // 显示加载提示
-    // wx.showLoading({
-    //   title: '小团子清清嗓子...',
-    // });
+    this.setData({ isPlaying: true });
+    
     wx.request({
       url: 'https://openspeech.bytedance.com/api/v1/tts',
       method: 'POST',
@@ -410,44 +424,34 @@ Page({
       success: (res) => {
         wx.hideLoading();
         if (res.data.data) {
-          // 获取 base64 音频数据
           const base64Audio = res.data.data;
-          
-          // 将 base64 转换为本地临时文件
           const fsm = wx.getFileSystemManager();
           const FILE_PATH = `${wx.env.USER_DATA_PATH}/temp_audio_${messageId}.mp3`;
           
           try {
-            // 写入文件
             fsm.writeFileSync(
               FILE_PATH,
               base64Audio,
               'base64'
-            );            
-            // 创建音频实例
+            );
+            
             const innerAudioContext = wx.createInnerAudioContext();
+            this.setData({ currentAudioContext: innerAudioContext }); // 保存当前音频实例
             innerAudioContext.src = FILE_PATH;
             
-            // 监听错误
             innerAudioContext.onError((err) => {
               console.error('音频播放错误:', err);
               wx.showToast({
                 title: '播放失败',
                 icon: 'none'
               });
+              this.setData({ isPlaying: false });
+              this.playNextInQueue(); // 播放失败时尝试播放队列中的下一个
             });
             
-            // 开始播放
             innerAudioContext.play();
             
-            // 监听播放开始
-            innerAudioContext.onPlay(() => {
-              console.log('音频开始播放');
-            });
-            
-            // 监听播放结束
             innerAudioContext.onEnded(() => {
-         
               // 播放结束后清理临时文件
               fsm.unlink({
                 filePath: FILE_PATH,
@@ -455,7 +459,9 @@ Page({
                   console.log('临时音频文件删除成功:', FILE_PATH);
                 }
               });
-              innerAudioContext.destroy(); // 销毁音频实例
+              innerAudioContext.destroy();
+              this.setData({ isPlaying: false });
+              this.playNextInQueue(); // 播放完成后尝试播放队列中的下一个
             });
             
           } catch (error) {
@@ -464,12 +470,9 @@ Page({
               title: '音频处理失败',
               icon: 'none'
             });
+            this.setData({ isPlaying: false });
+            this.playNextInQueue();
           }
-        } else {
-          wx.showToast({
-            title: '未获取到音频数据',
-            icon: 'none'
-          });
         }
       },
       fail: (error) => {
@@ -479,8 +482,25 @@ Page({
           title: '语音合成失败',
           icon: 'none'
         });
+        this.setData({ isPlaying: false });
+        this.playNextInQueue();
       }
     });
+  },
+
+  // 新增：处理音频队列的方法
+  playNextInQueue: function() {
+    if (this.data.audioQueue.length > 0) {
+      const nextAudio = this.data.audioQueue.shift();
+      this.playAudio({
+        currentTarget: {
+          dataset: {
+            text: nextAudio.text,
+            messageId: nextAudio.messageId
+          }
+        }
+      });
+    }
   },
 
   // 添加开关切换处理方法
@@ -490,5 +510,21 @@ Page({
     });
     // 保存设置到本地存储
     wx.setStorageSync('autoPlay', e.detail.value);
+  },
+
+  // 新增：页面卸载时的处理
+  onUnload: function() {
+    // 停止当前正在播放的音频
+    if (this.data.currentAudioContext) {
+      this.data.currentAudioContext.stop();
+      this.data.currentAudioContext.destroy();
+    }
+    
+    // 清空播放队列
+    this.setData({
+      audioQueue: [],
+      isPlaying: false,
+      currentAudioContext: null
+    });
   }
 });    

@@ -105,8 +105,8 @@
   <!-- 在输入框上方添加自动播报开关 -->
   <view class="auto-play-switch">
     <view class="switch-label">
-      <image src="../images/audio.png" mode="aspectFit"/>
-      <text>自动语音播报</text>
+      
+      <text>语音自动播报</text>
     </view>
     <switch checked="{{autoPlay}}" bindchange="onAutoPlayChange" color="#4285f4"/>
   </view>
@@ -116,7 +116,7 @@
     <view class="input-wrapper">
       <input class="input-field" 
              value="{{inputValue}}" 
-             placeholder="想去哪里请告诉我" 
+             placeholder="想去哪里快告诉我哦" 
              bindinput="onInputChange"
              bindconfirm="onSend"/>
     </view>

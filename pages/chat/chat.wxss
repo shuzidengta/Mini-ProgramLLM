@@ -384,7 +384,7 @@
   align-items: center;
   gap: 10px;
   position: relative;  /* 添加相对定位 */
-  padding-right: 40px;  /* 为按钮留出空间 */
+  padding-right: 0px;  /* 为按钮留出空间 */
 }
 
 .message-text-container {
@@ -395,7 +395,7 @@
 .audio-button-top-right {
   position: absolute;
   left: 300px;
-  top: -25px;
+  top: -10px;
   right: 0;
   padding: 5px;
 }
@@ -407,7 +407,7 @@
 
 /* 自动播报开关样式 */
 .auto-play-switch {
-  height: 30px;
+  height: 25px;
   position: fixed;
   bottom: 65px;
   left: 0;
