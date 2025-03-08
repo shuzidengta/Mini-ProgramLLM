@@ -204,18 +204,30 @@ Page({
       });
       wx.showToast({
         title: '支付成功',
-        icon: 'success'
+        icon: 'success',
+        success: () => {
+          // 在提示消失后跳转页面
+          wx.navigateTo({
+            url: '/pages/route/route',
+            success: () => {
+              console.log('跳转到 route 页面成功');
+            },
+            fail: (err) => {
+              console.error('跳转失败', err);
+            }
+          });
+        }
       });
     }, 1500);
   },
-  simulatePayment() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const paymentResult ='success'; 
-        resolve(paymentResult);
-      }, 2000);
-    });
-  },
+  // simulatePayment() {
+  //   return new Promise((resolve) => {
+  //     setTimeout(() => {
+  //       const paymentResult ='success'; 
+  //       resolve(paymentResult);
+  //     }, 2000);
+  //   });
+  // },
   
   // 编辑行程段
   onEditSegment(e) {

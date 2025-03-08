@@ -1,0 +1,57 @@
+/* pages/route/route.wxss */
+.container {
+  
+  height: 10px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  padding-top: 0px;
+}
+
+/* 导航栏样式 */
+.custom-navbar { 
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  z-index: 100;
+
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+}
+
+.back-button {
+  padding: 8px;
+  position: absolute;
+  left: 16px;
+}
+
+.back-button image {
+  width: 20px;
+  height: 20px;
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+
+.route {
+  width: 50%;
+}
+
+.route image {
+  width: 390px;
+  height: 900px;
+}

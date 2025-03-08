@@ -68,7 +68,7 @@
   <!-- 底部输入框容器 -->
   <view class="input-container">
     <view class="input-wrapper">
-      <input value="{{inputValue}}" key="{{inputValueKey}}" class="input-field" placeholder="想去哪里请告诉我" bindinput="onInputChange" bindconfirm="onSend"/>
+      <input value="{{inputValue}}" key="{{inputValueKey}}" class="input-field" placeholder="想去哪里快告诉我哦" bindinput="onInputChange" bindconfirm="onSend"/>
     </view>
   </view>
 </view>

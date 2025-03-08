@@ -1,0 +1,18 @@
+<!--pages/route/route.wxml-->
+
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <view class="custom-navbar" style="{{customNavbarStyle}}">
+    <view class="nav-left">
+      <view class="back-button" bindtap="onBack">
+        <image src="../images/back.png" mode="aspectFit"/>
+      </view>
+      <view class="title">行程详情</view>
+    </view>
+  </view> 
+</view>
+
+  <view class='route'>
+    <image src="../images/route.png" mode="aspectFill"/>
+  </view>
+  

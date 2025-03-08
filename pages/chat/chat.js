@@ -387,17 +387,17 @@ Page({
       url: 'https://openspeech.bytedance.com/api/v1/tts',
       method: 'POST',
       header: {
-        'Authorization': 'Bearer;AF7yJGjrR2cAtpryQklhUTQ6QztMawPk',
+        'Authorization': 'Bearer;GCAYy8FjiMP-URGBwu032IOge87CH7AB',
         'Content-Type': 'application/json'
       },
       data: {
         "app": {
-          "appid": "4980145082",
-          "token": "AF7yJGjrR2cAtpryQklhUTQ6QztMawPk",
+          "appid": "3281983592",
+          "token": "GCAYy8FjiMP-URGBwu032IOge87CH7AB",
           "cluster": "volcano_tts"
         },
         "user": {
-          "uid": "uid123"
+          "uid": "uid883"
         },
         "audio": {
           "voice_type": "BV700_streaming",

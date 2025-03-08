@@ -105,7 +105,6 @@
   <!-- 在输入框上方添加自动播报开关 -->
   <view class="auto-play-switch">
     <view class="switch-label">
-      
       <text>语音自动播报</text>
     </view>
     <switch checked="{{autoPlay}}" bindchange="onAutoPlayChange" color="#4285f4"/>
